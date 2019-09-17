@@ -1,6 +1,6 @@
 # zhilian_login_puppeteer
 
-安装好 node
+安装好 node 环境
 
 安装好typescript环境
 
