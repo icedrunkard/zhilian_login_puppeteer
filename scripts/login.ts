@@ -1,4 +1,4 @@
-import fs from 'fs';
+import * as fs from 'fs';
 import axios from 'axios';
 import { executablePath, browserWSEndpoint, userAgent, smsHelperHost } from '../utils/settings';
 import { crackIfNeeded } from './cracker'
