@@ -74,9 +74,9 @@ async function inputSMS(page:any, sms:string){
   console.log('sms input finished')
 }
 
-async function smsStatusCache(mobile:string,status:string,channel:string='2'){
-  let url = `${smsHelperHost}/sms-status-cache/`;
-  let data = {mobile, status, channel}
+async function smsStatusCache(mobile:string,sms_status:string,channel:string='2'){
+  let url = `${smsHelperHost}/sms-status-cache`;
+  let data = {mobile, sms_status, channel}
   let res = await axios.post(url, data);
   console.log('axios',res.data);
   try{
@@ -143,3 +143,5 @@ export default async function mobileLogin ( mobile:string, proxy:string='' ) {
 
 // console.log(waitSMS('13021983040'))
 // mobileLogin('13021983040');
+
+smsStatusCache('13021983040','err','2')
