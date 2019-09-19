@@ -12,7 +12,7 @@ const server = http.createServer(async function(req:any, res:any) {
       JSON.parse(body);
     } catch {
       res.writeHead(200, {'Content-Type': 'text/plain'});
-      res.end('failed');
+      res.end('param failed');
       return;
     };
     let parsedBody = JSON.parse(body);
