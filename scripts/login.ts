@@ -76,6 +76,11 @@ async function inputSMS(page:any, sms:string){
 
 async function finishLogin(page:any){
   await page.click('#login__message > div > div > button');
+  let r = await page.waitForResponse((res:any)=>{return /passport\.zhaopin\.com\/jsonp\/smsLoginAndRegister/.test(res.url())});
+  let text = await r.text();
+  if ( text.length > 10 ){
+    return 'sms-err'
+  }
   await page.waitForResponse((res:any)=>{return /https:\/\/rd5\.zhaopin\.com/.test(res.url())});
   await page.waitFor(0.5e3);
   await page.reload();
@@ -116,7 +121,9 @@ export default async function mobileLogin ( mobile:string, proxy:string='' ) {
       return 'failed'
     };
     await inputSMS(page,sms);
-    return await finishLogin(page);
+    let r = await finishLogin(page);
+    await browser.close();
+    return r;
   }
 }
 
