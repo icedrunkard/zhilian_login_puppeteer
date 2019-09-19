@@ -8,7 +8,15 @@ const server = http.createServer(async function(req:any, res:any) {
   });
   req.on('end', async function () {
     // 解析参数
+    try { 
+      JSON.parse(body);
+    } catch {
+      res.writeHead(200, {'Content-Type': 'text/plain'});
+      res.end('failed');
+      return;
+    };
     let parsedBody = JSON.parse(body);
+
     // 设置响应头部信息及编码
     console.log(parsedBody);
 
