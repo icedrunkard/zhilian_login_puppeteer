@@ -78,7 +78,7 @@ async function smsStatusCache(mobile:string,status:string,channel:string='2'){
   let url = `${smsHelperHost}/sms-status-cache/`;
   let data = {mobile, status, channel}
   let res = await axios.post(url, data);
-  console.log(res.data);
+  console.log('axios',res.data);
   try{
     return res.data.sms || '';
   } catch {
@@ -135,12 +135,7 @@ export default async function mobileLogin ( mobile:string, proxy:string='' ) {
     };
     await inputSMS(page,sms);
     let r = await finishLogin(page);
-    if (r == 'sms-err'){
-      await smsStatusCache(mobile,'err',channel);
-    }else{
-      await smsStatusCache(mobile,'good',channel);
-    }
-
+    await smsStatusCache(mobile,r === 'sms-err' ? 'err' : 'good',channel);
     await browser.close();
     return r;
   }

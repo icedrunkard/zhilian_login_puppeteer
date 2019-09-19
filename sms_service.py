@@ -127,7 +127,7 @@ async def sms_status_cache(request):
             data = {"code": 500, "msg": "参数错误，无法解析"}
             text = json.dumps(data, ensure_ascii=False)
             return web.json_response(status=200, text=text)
-    print(obj)
+    print('sms_status_cache obj',obj)
     if not (isinstance(obj.get('mobile'), str) and isinstance(obj.get('channel'), str) and isinstance(obj.get('sms_status'),
                                                                                                       str)):
         data = {"code": 400, "msg": "存储sms时，必须带有 mobile/channel/sms_status三个字段,且是字符串"}
@@ -138,10 +138,11 @@ async def sms_status_cache(request):
     sms_status = obj['sms_status']
     t = time.time()
     ts = time.strftime('%Y-%m-%d %H:%M:%S')
-    sms_obj = {'sms_status': sms_status, 'update_time': t, 'update_time_str': ts}
+    sms_status_obj = {'sms_status': sms_status, 'update_time': t, 'update_time_str': ts}
+    print(sms_status_obj)
     redis = Redis()
     pool = await redis.get_redis_pool(('127.0.0.1', 7001), db=1, password='redis7001', encoding='utf-8')
-    await pool.hset(channel, mobile, json.dumps(sms_obj))
+    await pool.hset(channel, mobile, json.dumps(sms_status_obj))
     value = str(await pool.hget(channel, mobile, ))
     await redis.close()
     data = {"code": 200, "msg": "set value successfully {}".format(value)}
