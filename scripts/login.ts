@@ -128,16 +128,27 @@ export default async function mobileLogin ( mobile:string, proxy:string='' ) {
     return 'failed';
   } else {
     let channel = '2';
-    let sms = await waitSMS(mobile,channel);
-    if (sms.length<6){
-      await browser.close();
-      return 'failed'
-    };
-    await inputSMS(page,sms);
-    let r = await finishLogin(page);
-    await smsStatusCache(mobile,r === 'sms-err' ? 'err' : 'good',channel);
+    let sms;
+    let t0 = Date.now()/1000;
+    let r ;
+    while (Date.now()/1000 - t0 < 60) {
+      sms = await waitSMS(mobile,channel);
+      if (sms.length<6){
+        await browser.close();
+        return 'failed';
+      };
+      await inputSMS(page,sms);
+      r = await finishLogin(page);
+      await smsStatusCache(mobile,r === 'sms-err' ? 'err' : 'good',channel);
+      if (r !== 'sms-err'){
+        await browser.close();
+        return r;
+      } else {
+        await page.waitFor(1e3);
+      };
+    }
     await browser.close();
-    return r;
+    return 'time-err';
   }
 }
 
